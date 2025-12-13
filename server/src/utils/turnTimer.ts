@@ -11,7 +11,7 @@ import {
 } from "../state";
 import { emitRoomState } from "./emitRoomState";
 
-const TURN_DURATION_MS = 20_000;
+const TURN_DURATION_MS = 30_000;
 const TIMEOUT_GUESS_LABEL = "⏱️ Timeout";
 
 export const scheduleTurnTimer = (io: Server, roomCode: string, playerId: string) => {
