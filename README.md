@@ -1,27 +1,26 @@
 # 8Words
 
-8Words is a real-time, two-player word-guessing game. It was developed almost exclusively by prompting GitHub Copilot and AI tools, with minimal manual coding.
+8Words is a single player game where the objective is to guess a series of related words. Each word is related to the last and you receive the first word to get you started.
 
-## How to Play
+## Overview
+This is a monorepo which implements the 8Words game. 
 
-- Two players join a room by entering a name and room code.
-- Each player enters a sequence of 8 logically connected words.
-- The first word of each sequence is revealed to the opponent; the rest are shown as first letter + underscores (with spacing for clarity).
-- Players take turns guessing the opponent’s words. Correct guesses reveal the word and allow the player to continue their turn. A wrong guess ends the turn.
-- The first player to reveal all of the opponent’s words (except the first, which is always visible) wins.
-- The game is case-insensitive and requires exact word length matches.
-- After a game ends, players can play again in the same room.
+## Stack
+### Frontend
+- Typescript
+- React
+- Tailwind
 
-## Features
-- Real-time lobby and player sync using Socket.IO
-- Word entry and confirmation UI
-- Turn-based guessing with visual feedback and celebratory animations
-- Game state and word reveals synced in real time
-- Play-again/rematch support
+### Backend
+- Typescript
+- Express
 
-## Development
-- Built with React + Vite + TypeScript (client) and Express + Socket.IO (server)
-- Most of the code and features were implemented by prompting AI tools, with a focus on rapid prototyping and iteration.
+### Database
+- Postgres
 
-## Running the Game
-See the `client/README.md` and `server/README.md` for setup and run instructions for each part.
+## Gameplay
+Game starts by selecting which entry to play. We can default to the most recent entry.
+
+The player received the first word in full along with the first letter of the next word and the length of the unknown word.
+
+The player will attempt guesses on the current unknown word. Esch guess will be recorded on the client and once the plager is of guesses they will have lost the game. At the end we show them what the word they lost on whas
