@@ -1,6 +1,6 @@
-# Connect8
+# 8Words
 
-Connect8 is a real-time, two-player word-guessing game. It was developed almost exclusively by prompting GitHub Copilot and AI tools, with minimal manual coding.
+8Words is a real-time, two-player word-guessing game. It was developed almost exclusively by prompting GitHub Copilot and AI tools, with minimal manual coding.
 
 ## How to Play
 
