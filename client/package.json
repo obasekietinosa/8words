@@ -1,0 +1,15 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "This document outlines the development roadmap for the 8Words frontend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo 'Building client...'",
+    "dev": "echo 'Starting dev server...'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
