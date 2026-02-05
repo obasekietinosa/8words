@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { getWordSet } from '../services/api';
-import type { WordSet } from '../types';
 import { useGame } from '../hooks/useGame';
 import { Header } from '../components/Header';
 import { WordChain } from '../components/WordChain';
@@ -10,9 +10,12 @@ import { GameStatus } from '../components/GameStatus';
 
 export const Game: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [wordSet, setWordSet] = useState<WordSet | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  const { data: wordSet = null, isLoading: loading, isError } = useQuery({
+    queryKey: ['wordSet', id],
+    queryFn: () => getWordSet(parseInt(id!)),
+    enabled: !!id,
+  });
 
   const {
     currentWordIndex,
@@ -25,24 +28,12 @@ export const Game: React.FC = () => {
     maxGuesses
   } = useGame(wordSet);
 
-  useEffect(() => {
-    if (id) {
-      getWordSet(parseInt(id))
-        .then(setWordSet)
-        .catch((err) => {
-          console.error(err);
-          setError('Failed to load word set.');
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [id]);
-
   if (loading) return <div className="p-4 text-center">Loading...</div>;
-  if (error) return (
+  if (isError) return (
       <div className="min-h-screen bg-gray-100">
           <Header />
           <div className="p-8 text-center">
-            <div className="text-red-600 mb-4">{error}</div>
+            <div className="text-red-600 mb-4">Failed to load word set.</div>
             <Link to="/" className="text-blue-600 hover:underline">Back to Home</Link>
           </div>
       </div>

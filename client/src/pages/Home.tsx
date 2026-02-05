@@ -1,23 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { getWordSets } from '../services/api';
-import type { WordSetSummary } from '../types';
 import { Header } from '../components/Header';
 
 export const Home: React.FC = () => {
-  const [wordSets, setWordSets] = useState<WordSetSummary[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    getWordSets()
-      .then(setWordSets)
-      .catch((err) => {
-        console.error(err);
-        setError('Failed to load word sets.');
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const { data: wordSets = [], isLoading: loading, isError } = useQuery({
+    queryKey: ['wordSets'],
+    queryFn: getWordSets,
+  });
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -26,7 +17,7 @@ export const Home: React.FC = () => {
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Select a Word Set</h1>
 
         {loading && <div className="text-center p-4">Loading...</div>}
-        {error && <div className="text-center p-4 text-red-600">{error}</div>}
+        {isError && <div className="text-center p-4 text-red-600">Failed to load word sets.</div>}
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {wordSets.map((ws) => (
@@ -39,7 +30,7 @@ export const Home: React.FC = () => {
           ))}
         </div>
 
-        {!loading && wordSets.length === 0 && !error && (
+        {!loading && wordSets.length === 0 && !isError && (
             <div className="text-center text-gray-500">No word sets available.</div>
         )}
       </main>
