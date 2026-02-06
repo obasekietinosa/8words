@@ -17,7 +17,7 @@ export interface GeneratedWordSet {
 }
 
 export const generateWordSet = async (prompt: string): Promise<GeneratedWordSet> => {
-  const model = genAI.getGenerativeModel({ model: "gemini-flash-latest"});
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
 
   const fullPrompt = `${prompt}
 
