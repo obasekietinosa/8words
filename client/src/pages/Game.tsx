@@ -20,8 +20,10 @@ export const Game: React.FC = () => {
   const {
     currentWordIndex,
     guesses,
+    mistakes,
     status,
     isRevealed,
+    revealedIndices,
     submitGuess,
     resetGame,
     words,
@@ -44,28 +46,34 @@ export const Game: React.FC = () => {
     <div className="min-h-screen bg-gray-100">
       <Header />
       <main className="container mx-auto p-4 max-w-2xl">
-        <div className="mb-6 flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-800">{wordSet.title}</h1>
-            <Link to="/" className="text-sm text-gray-500 hover:text-gray-700">← Change Set</Link>
+        <div className="sticky top-0 z-10 bg-gray-100 pb-4 pt-2">
+            <div className="mb-2 flex justify-between items-center">
+                <h1 className="text-2xl font-bold text-gray-800">{wordSet.title}</h1>
+                <Link to="/" className="text-sm text-gray-500 hover:text-gray-700">← Change Set</Link>
+            </div>
+
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <GameStatus
+                    status={status}
+                    guesses={guesses}
+                    mistakes={mistakes}
+                    maxGuesses={maxGuesses}
+                    onReset={resetGame}
+                />
+
+                <GuessInput
+                    onGuess={submitGuess}
+                    disabled={status !== 'playing'}
+                />
+            </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mt-4">
             <WordChain
                 words={words}
                 currentWordIndex={currentWordIndex}
                 isRevealed={isRevealed}
-            />
-
-            <GameStatus
-                status={status}
-                guesses={guesses}
-                maxGuesses={maxGuesses}
-                onReset={resetGame}
-            />
-
-            <GuessInput
-                onGuess={submitGuess}
-                disabled={status !== 'playing'}
+                revealedIndices={revealedIndices}
             />
         </div>
       </main>

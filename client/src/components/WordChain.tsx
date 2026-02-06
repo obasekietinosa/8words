@@ -4,9 +4,10 @@ interface WordChainProps {
   words: string[];
   currentWordIndex: number;
   isRevealed: boolean;
+  revealedIndices: Set<number>;
 }
 
-export const WordChain: React.FC<WordChainProps> = ({ words, currentWordIndex, isRevealed }) => {
+export const WordChain: React.FC<WordChainProps> = ({ words, currentWordIndex, isRevealed, revealedIndices }) => {
   return (
     <div className="flex flex-col gap-2 my-4 max-w-md mx-auto">
       {words.map((word, index) => {
@@ -30,10 +31,10 @@ export const WordChain: React.FC<WordChainProps> = ({ words, currentWordIndex, i
              );
           }
 
-          // Still guessing: Show first char + blanks
-          const firstChar = word.charAt(0);
-          const restLength = word.length - 1;
-          const masked = firstChar + '_ '.repeat(restLength).trim();
+          // Still guessing: Show revealed chars + blanks
+          const masked = word.split('').map((char, i) => {
+             return revealedIndices.has(i) ? char : '_';
+          }).join(' ');
 
           return (
              <div key={index} className="p-3 bg-blue-50 border border-blue-200 rounded text-blue-800 font-mono text-lg text-center tracking-widest uppercase shadow-sm ring-2 ring-blue-300">
