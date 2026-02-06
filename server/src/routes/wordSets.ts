@@ -13,6 +13,20 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/random', async (req: Request, res: Response) => {
+  try {
+    const id = await WordSetModel.findRandomId();
+    if (id) {
+      res.json({ id });
+    } else {
+      res.status(404).json({ error: 'No word sets found' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 router.get('/:id', async (req: Request, res: Response) => {
   const id = parseInt(req.params.id as string);
   if (isNaN(id)) {

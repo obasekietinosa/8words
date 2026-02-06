@@ -28,3 +28,12 @@ export const findById = async (id: number): Promise<WordSet | null> => {
   }
   return null;
 };
+
+export const findRandomId = async (): Promise<number | null> => {
+  const text = 'SELECT id FROM word_sets ORDER BY RANDOM() LIMIT 1';
+  const result = await query<{ id: number }>(text);
+  if (result.rows.length > 0) {
+    return result.rows[0].id;
+  }
+  return null;
+};

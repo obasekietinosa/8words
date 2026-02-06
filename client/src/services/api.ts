@@ -20,3 +20,8 @@ export const getWordSet = async (id: number): Promise<WordSet> => {
   const response = await api.get<WordSet>(`/word-sets/${id}`);
   return response.data;
 };
+
+export const getRandomWordSetId = async (): Promise<{ id: number }> => {
+  const response = await api.get<{ id: number }>('/word-sets/random');
+  return response.data;
+};
