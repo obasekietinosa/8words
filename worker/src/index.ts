@@ -1,8 +1,9 @@
 import { generateWordSet } from './gemini';
 import { query } from './db';
+import { getPrompt } from './prompts';
 
 const main = async () => {
-  const prompt = process.argv[2] || "Generate a creative word set for a word guessing game (like Pictionary or Charades). It should have a theme.";
+  const prompt = process.argv[2] || getPrompt();
 
   console.log(`Starting generation with prompt: "${prompt}"`);
 
