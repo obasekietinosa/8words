@@ -6,6 +6,7 @@ const MAX_GUESSES = 6;
 export function useGame(wordSet: WordSet | null) {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [guesses, setGuesses] = useState<string[]>([]);
+  const [mistakes, setMistakes] = useState(0);
   const [status, setStatus] = useState<GameStatus>('playing');
   const [isRevealed, setIsRevealed] = useState(false);
   const [revealedIndices, setRevealedIndices] = useState<Set<number>>(new Set([0]));
@@ -21,6 +22,7 @@ export function useGame(wordSet: WordSet | null) {
   const resetGame = useCallback(() => {
     setCurrentWordIndex(0);
     setGuesses([]);
+    setMistakes(0);
     setStatus('playing');
     setIsRevealed(false);
     setRevealedIndices(new Set([0]));
@@ -53,8 +55,9 @@ export function useGame(wordSet: WordSet | null) {
       }
     } else {
       // Incorrect guess
-      const newGuesses = [...guesses, guess];
-      setGuesses(newGuesses);
+      setGuesses(prev => [...prev, guess]);
+      const newMistakes = mistakes + 1;
+      setMistakes(newMistakes);
 
       // Reveal a random unrevealed character
       const unrevealedIndices: number[] = [];
@@ -74,16 +77,17 @@ export function useGame(wordSet: WordSet | null) {
         });
       }
 
-      if (newGuesses.length >= MAX_GUESSES) {
+      if (newMistakes >= MAX_GUESSES) {
         setStatus('lost');
         setIsRevealed(true);
       }
     }
-  }, [wordSet, currentWordIndex, guesses, status, words, revealedIndices]);
+  }, [wordSet, currentWordIndex, mistakes, status, words, revealedIndices]);
 
   return {
     currentWordIndex,
     guesses,
+    mistakes,
     status,
     isRevealed,
     revealedIndices,

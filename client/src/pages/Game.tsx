@@ -20,6 +20,7 @@ export const Game: React.FC = () => {
   const {
     currentWordIndex,
     guesses,
+    mistakes,
     status,
     isRevealed,
     revealedIndices,
@@ -55,6 +56,7 @@ export const Game: React.FC = () => {
                 <GameStatus
                     status={status}
                     guesses={guesses}
+                    mistakes={mistakes}
                     maxGuesses={maxGuesses}
                     onReset={resetGame}
                 />

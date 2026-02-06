@@ -4,12 +4,13 @@ import type { GameStatus as StatusType } from '../types';
 interface GameStatusProps {
   status: StatusType;
   guesses: string[];
+  mistakes: number;
   maxGuesses: number;
   onReset?: () => void;
 }
 
-export const GameStatus: React.FC<GameStatusProps> = ({ status, guesses, maxGuesses, onReset }) => {
-  const guessesLeft = maxGuesses - guesses.length;
+export const GameStatus: React.FC<GameStatusProps> = ({ status, guesses, mistakes, maxGuesses, onReset }) => {
+  const guessesLeft = maxGuesses - mistakes;
 
   return (
     <div className="mt-6 p-4 border rounded-lg bg-gray-50 max-w-md mx-auto shadow-sm">
