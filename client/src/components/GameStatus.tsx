@@ -19,20 +19,17 @@ export const GameStatus: React.FC<GameStatusProps> = ({ status, guesses, mistake
     <Card className="mb-6 bg-neo-bg">
       {status === 'playing' && (
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-             <span className="font-bold uppercase tracking-wide">Status</span>
-             <Badge variant="primary" size="md" className="text-sm">Playing</Badge>
-          </div>
-
           <div className="flex items-center justify-between border-b-2 border-black pb-4">
-            <span className="font-bold uppercase tracking-wide">Lives</span>
-            <div className="flex gap-1">
-              {Array.from({ length: maxGuesses }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-4 w-4 border-2 border-black rounded-full ${i < guessesLeft ? 'bg-neo-accent' : 'bg-transparent'}`}
-                />
-              ))}
+            <div className="flex items-center gap-2">
+              <span className="font-bold uppercase tracking-wide">Lives</span>
+              <div className="flex gap-1">
+                {Array.from({ length: maxGuesses }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-4 w-4 border-2 border-black rounded-full ${i < guessesLeft ? 'bg-neo-accent' : 'bg-transparent'}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
