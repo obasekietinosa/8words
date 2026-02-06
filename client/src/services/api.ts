@@ -7,6 +7,10 @@ const api = axios.create({
 
 export const getWordSets = async (): Promise<WordSetSummary[]> => {
   const response = await api.get<WordSetSummary[]>('/word-sets');
+  if (!Array.isArray(response.data)) {
+    console.error('getWordSets: Expected array but received:', response.data);
+    return [];
+  }
   return response.data;
 };
 
