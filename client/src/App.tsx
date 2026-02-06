@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
+import { WordSetList } from './pages/WordSetList';
 import { Game } from './pages/Game';
 import { NotFound } from './components/NotFound';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -11,6 +12,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/puzzles" element={<WordSetList />} />
           <Route path="/play/:id" element={<Game />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
