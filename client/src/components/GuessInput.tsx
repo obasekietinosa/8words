@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
+import { cn } from '../utils/cn';
 
 interface GuessInputProps {
   onGuess: (guess: string) => void;
   disabled?: boolean;
+  className?: string;
 }
 
-export const GuessInput: React.FC<GuessInputProps> = ({ onGuess, disabled }) => {
+export const GuessInput: React.FC<GuessInputProps> = ({ onGuess, disabled, className }) => {
   const [value, setValue] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -19,7 +21,7 @@ export const GuessInput: React.FC<GuessInputProps> = ({ onGuess, disabled }) => 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-4 mt-6">
+    <form onSubmit={handleSubmit} className={cn("flex gap-4 mt-6", className)}>
       <Input
         type="text"
         placeholder="ENTER GUESS..."

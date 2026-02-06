@@ -1,27 +1,40 @@
 import React from 'react';
 import { cn } from '../utils/cn';
+import { GuessInput } from './GuessInput';
 
 interface WordChainProps {
   words: string[];
   currentWordIndex: number;
   isRevealed: boolean;
   revealedIndices: Set<number>;
+  onGuess: (guess: string) => void;
 }
 
-export const WordChain: React.FC<WordChainProps> = ({ words, currentWordIndex, isRevealed, revealedIndices }) => {
+export const WordChain: React.FC<WordChainProps> = ({
+  words,
+  currentWordIndex,
+  isRevealed,
+  revealedIndices,
+  onGuess
+}) => {
+  // Create a list of words to display:
+  // 1. Map to preserve original indices
+  // 2. Filter to show only up to current active word (or last revealed)
+  // 3. Reverse to show current/newest at top
+  const displayedWords = words
+    .map((word, index) => ({ word, index }))
+    .slice(0, currentWordIndex + 2)
+    .reverse();
+
   return (
     <div className="flex flex-col gap-4 my-8 max-w-md mx-auto">
-      {words.map((word, index) => {
+      {displayedWords.map(({ word, index }) => {
         const isPast = index <= currentWordIndex;
         const isCurrent = index === currentWordIndex + 1;
         const isFuture = index > currentWordIndex + 1;
 
         return (
           <div key={index} className="relative flex flex-col items-center">
-            {/* Connector Line */}
-            {index > 0 && (
-              <div className="h-6 w-1 bg-black mb-1" />
-            )}
 
             <div
               className={cn(
@@ -42,21 +55,32 @@ export const WordChain: React.FC<WordChainProps> = ({ words, currentWordIndex, i
                 word
               ) : isCurrent ? (
                 isRevealed ? word : (
-                  <span className="inline-block">
-                    {word.split('').map((char, i) => (
-                      <span key={i} className={cn(
-                        "inline-block w-6 border-b-4 mx-0.5",
-                        revealedIndices.has(i) ? "border-black text-black" : "border-gray-300 text-transparent"
-                      )}>
-                        {revealedIndices.has(i) ? char : '_'}
-                      </span>
-                    ))}
-                  </span>
+                  <div className="flex flex-col items-center w-full">
+                    {/* Hint Display */}
+                    <span className="inline-block mb-4">
+                      {word.split('').map((char, i) => (
+                        <span key={i} className={cn(
+                          "inline-block w-6 border-b-4 mx-0.5 transition-all duration-300",
+                          revealedIndices.has(i) ? "border-black text-black" : "border-gray-300 text-transparent"
+                        )}>
+                          {revealedIndices.has(i) ? char : '_'}
+                        </span>
+                      ))}
+                    </span>
+
+                    {/* Inline Input */}
+                    <GuessInput onGuess={onGuess} className="mt-0 w-full" />
+                  </div>
                 )
               ) : (
                  <span className="opacity-20">???</span>
               )}
             </div>
+
+            {/* Connector Line - Placed AFTER the card for reversed layout (connecting down) */}
+            {index > 0 && (
+              <div className="h-6 w-1 bg-black mt-1" />
+            )}
           </div>
         );
       })}

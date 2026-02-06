@@ -5,7 +5,6 @@ import { getWordSet } from '../services/api';
 import { useGame } from '../hooks/useGame';
 import { Header } from '../components/Header';
 import { WordChain } from '../components/WordChain';
-import { GuessInput } from '../components/GuessInput';
 import { GameStatus } from '../components/GameStatus';
 import { Container } from '../components/ui/Container';
 import { Loader2, ArrowLeft } from 'lucide-react';
@@ -78,13 +77,6 @@ export const Game: React.FC = () => {
                 maxGuesses={maxGuesses}
                 onReset={resetGame}
             />
-
-            <div className="bg-white p-4 border-4 border-black shadow-neo-sm">
-                <GuessInput
-                    onGuess={submitGuess}
-                    disabled={status !== 'playing'}
-                />
-            </div>
         </div>
 
         <WordChain
@@ -92,6 +84,7 @@ export const Game: React.FC = () => {
             currentWordIndex={currentWordIndex}
             isRevealed={isRevealed}
             revealedIndices={revealedIndices}
+            onGuess={submitGuess}
         />
       </Container>
     </div>
