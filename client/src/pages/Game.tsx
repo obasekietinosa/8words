@@ -7,6 +7,9 @@ import { Header } from '../components/Header';
 import { WordChain } from '../components/WordChain';
 import { GuessInput } from '../components/GuessInput';
 import { GameStatus } from '../components/GameStatus';
+import { Container } from '../components/ui/Container';
+import { Loader2, ArrowLeft } from 'lucide-react';
+import { Button } from '../components/ui/Button';
 
 export const Game: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,37 +33,53 @@ export const Game: React.FC = () => {
     maxGuesses
   } = useGame(wordSet);
 
-  if (loading) return <div className="p-4 text-center">Loading...</div>;
-  if (isError) return (
-      <div className="min-h-screen bg-gray-100">
-          <Header />
-          <div className="p-8 text-center">
-            <div className="text-red-600 mb-4">Failed to load word set.</div>
-            <Link to="/" className="text-blue-600 hover:underline">Back to Home</Link>
+  if (loading) {
+    return (
+        <div className="min-h-screen bg-neo-bg flex items-center justify-center">
+             <Loader2 className="h-12 w-12 animate-spin" />
+        </div>
+    );
+  }
+
+  if (isError || !wordSet) {
+      return (
+          <div className="min-h-screen bg-neo-bg">
+              <Header />
+              <Container className="text-center py-20">
+                <div className="text-4xl font-black mb-8 uppercase">Failed to load word set</div>
+                <Link to="/">
+                    <Button>Back to Home</Button>
+                </Link>
+              </Container>
           </div>
-      </div>
-  );
-  if (!wordSet) return null;
+      );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-neo-bg pb-20">
       <Header />
-      <main className="container mx-auto p-4 max-w-2xl">
-        <div className="sticky top-0 z-10 bg-gray-100 pb-4 pt-2">
-            <div className="mb-2 flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-800">{wordSet.title}</h1>
-                <Link to="/" className="text-sm text-gray-500 hover:text-gray-700">← Change Set</Link>
+      <Container size="md" className="py-6">
+        <div className="sticky top-0 z-10 bg-neo-bg/95 backdrop-blur-sm pb-4 pt-2 border-b-4 border-black border-dashed mb-8">
+            <div className="mb-4 flex justify-between items-center">
+                <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight truncate pr-4">
+                    {wordSet.title}
+                </h1>
+                <Link to="/">
+                    <Button variant="ghost" size="sm" className="whitespace-nowrap">
+                        <ArrowLeft className="mr-2 h-4 w-4" /> Exit
+                    </Button>
+                </Link>
             </div>
 
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                <GameStatus
-                    status={status}
-                    guesses={guesses}
-                    mistakes={mistakes}
-                    maxGuesses={maxGuesses}
-                    onReset={resetGame}
-                />
+            <GameStatus
+                status={status}
+                guesses={guesses}
+                mistakes={mistakes}
+                maxGuesses={maxGuesses}
+                onReset={resetGame}
+            />
 
+            <div className="bg-white p-4 border-4 border-black shadow-neo-sm">
                 <GuessInput
                     onGuess={submitGuess}
                     disabled={status !== 'playing'}
@@ -68,15 +87,13 @@ export const Game: React.FC = () => {
             </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mt-4">
-            <WordChain
-                words={words}
-                currentWordIndex={currentWordIndex}
-                isRevealed={isRevealed}
-                revealedIndices={revealedIndices}
-            />
-        </div>
-      </main>
+        <WordChain
+            words={words}
+            currentWordIndex={currentWordIndex}
+            isRevealed={isRevealed}
+            revealedIndices={revealedIndices}
+        />
+      </Container>
     </div>
   );
 };

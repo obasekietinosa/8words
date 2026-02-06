@@ -13,12 +13,6 @@ export function useGame(wordSet: WordSet | null) {
 
   const words = wordSet ? wordSet.words.split(',') : [];
 
-  useEffect(() => {
-    if (wordSet) {
-      resetGame();
-    }
-  }, [wordSet]);
-
   const resetGame = useCallback(() => {
     setCurrentWordIndex(0);
     setGuesses([]);
@@ -27,6 +21,13 @@ export function useGame(wordSet: WordSet | null) {
     setIsRevealed(false);
     setRevealedIndices(new Set([0]));
   }, []);
+
+  useEffect(() => {
+    if (wordSet) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      resetGame();
+    }
+  }, [wordSet, resetGame]);
 
   const submitGuess = useCallback((guess: string) => {
     if (status !== 'playing' || !wordSet) return;

@@ -1,4 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { Button } from './ui/Button';
+import { Card } from './ui/Card';
 
 interface Props {
   children: ReactNode;
@@ -26,22 +28,27 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-          <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
-            <p className="text-gray-600 mb-4">We're sorry, but the application encountered an unexpected error.</p>
+        <div className="min-h-screen flex items-center justify-center bg-neo-bg p-4">
+          <Card className="max-w-md w-full bg-neo-secondary">
+            <h1 className="text-3xl font-black uppercase mb-4 text-black">
+              System Error
+            </h1>
+            <p className="font-bold mb-4 border-l-4 border-black pl-4">
+              We're sorry, but the application encountered an unexpected error.
+            </p>
             {this.state.error && (
-              <pre className="bg-gray-100 p-2 rounded text-xs overflow-auto mb-4 text-red-800">
+              <pre className="bg-black text-white p-4 text-xs overflow-auto mb-6 border-2 border-white font-mono">
                 {this.state.error.toString()}
               </pre>
             )}
-            <button
+            <Button
               onClick={() => window.location.reload()}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+              variant="primary"
+              className="w-full"
             >
               Reload Page
-            </button>
-          </div>
+            </Button>
+          </Card>
         </div>
       );
     }
