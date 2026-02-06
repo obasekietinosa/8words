@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Input } from './ui/Input';
+import { Button } from './ui/Button';
 
 interface GuessInputProps {
   onGuess: (guess: string) => void;
@@ -17,23 +19,23 @@ export const GuessInput: React.FC<GuessInputProps> = ({ onGuess, disabled }) => 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 mt-6 max-w-md mx-auto">
-      <input
+    <form onSubmit={handleSubmit} className="flex gap-4 mt-6">
+      <Input
         type="text"
-        className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-        placeholder="Enter your guess..."
+        placeholder="ENTER GUESS..."
         value={value}
         onChange={(e) => setValue(e.target.value)}
         disabled={disabled}
         autoFocus
+        className="uppercase"
       />
-      <button
+      <Button
         type="submit"
-        className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors shadow-sm"
+        variant="primary"
         disabled={disabled || !value.trim()}
       >
-        Guess
-      </button>
+        GUESS
+      </Button>
     </form>
   );
 };
