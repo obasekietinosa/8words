@@ -9,44 +9,62 @@ interface WordChainProps {
 
 export const WordChain: React.FC<WordChainProps> = ({ words, currentWordIndex, isRevealed, revealedIndices }) => {
   return (
-    <div className="flex flex-col gap-2 my-4 max-w-md mx-auto">
+    <div className="flex flex-col items-center w-full max-w-md mx-auto py-4">
       {words.map((word, index) => {
-        // Previously guessed words (or the start word)
-        if (index <= currentWordIndex) {
-          return (
-            <div key={index} className="p-3 bg-green-100 border border-green-300 rounded text-green-900 font-mono text-lg text-center uppercase shadow-sm">
-              {word}
-            </div>
-          );
-        }
+        const isPast = index <= currentWordIndex;
+        const isCurrent = index === currentWordIndex + 1;
+        const isLast = index === words.length - 1;
 
-        // The current target word
-        if (index === currentWordIndex + 1) {
-          if (isRevealed) {
-             // Game lost, reveal the word
-             return (
-               <div key={index} className="p-3 bg-red-100 border border-red-300 rounded text-red-900 font-mono text-lg text-center uppercase shadow-sm animate-pulse">
-                 {word}
-               </div>
-             );
-          }
+        // Connector Logic
+        const showConnector = !isLast;
 
-          // Still guessing: Show revealed chars + blanks
-          const masked = word.split('').map((char, i) => {
-             return revealedIndices.has(i) ? char : '_';
-          }).join(' ');
-
-          return (
-             <div key={index} className="p-3 bg-blue-50 border border-blue-200 rounded text-blue-800 font-mono text-lg text-center tracking-widest uppercase shadow-sm ring-2 ring-blue-300">
-               {masked}
-             </div>
-          );
-        }
-
-        // Future words
         return (
-          <div key={index} className="p-3 bg-gray-50 border border-gray-200 rounded text-gray-400 font-mono text-lg text-center shadow-sm">
-             {Array(word.length).fill('_').join(' ')}
+          <div key={index} className="flex flex-col items-center w-full animate-fadeIn">
+            {/* The Word Node */}
+            <div className={`
+              relative w-full p-4 rounded-xl border-4 text-center text-xl font-bold uppercase tracking-widest shadow-md transition-all duration-500
+              ${isPast
+                ? 'bg-brand-parchment border-brand-parchment text-brand-onyx font-sans' // Completed: Solid Parchment
+                : isCurrent
+                  ? 'bg-brand-onyx border-brand-amber text-brand-parchment font-mono shadow-[0_0_15px_rgba(242,169,59,0.2)]' // Active: Dark with Amber Border
+                  : 'bg-brand-onyx border-brand-parchment/20 text-brand-parchment/20 font-mono' // Future: Dimmed
+              }
+              ${isCurrent && isRevealed ? 'border-brand-sunset-end text-brand-sunset-end animate-shake' : ''}
+            `}>
+              {/* Content */}
+              {isPast ? (
+                word
+              ) : isCurrent ? (
+                isRevealed ? (
+                  word
+                ) : (
+                  <span className="flex justify-center gap-1">
+                    {word.split('').map((char, i) => (
+                      <span key={i} className={`
+                         w-6 border-b-2 text-center transition-all
+                         ${revealedIndices.has(i) ? 'border-brand-parchment/50' : 'border-brand-parchment/20 text-transparent'}
+                      `}>
+                         {revealedIndices.has(i) ? char : '_'}
+                      </span>
+                    ))}
+                  </span>
+                )
+              ) : (
+                <span className="opacity-0">HIDDEN</span>
+              )}
+            </div>
+
+            {/* Connector */}
+            {showConnector && (
+              <div className="flex flex-col items-center h-8">
+                <div className={`w-0.5 h-full ${isPast ? 'bg-brand-parchment' : 'bg-brand-parchment/20'}`}></div>
+                <div className={`w-3 h-3 rounded-full -mt-1 ${isPast ? 'bg-brand-parchment' : 'bg-brand-parchment/20'}`}></div>
+                 {/* Arrow tip for the active connection */}
+                 {isCurrent && !isLast && (
+                     <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-brand-parchment/20 -mt-2"></div>
+                 )}
+              </div>
+            )}
           </div>
         );
       })}

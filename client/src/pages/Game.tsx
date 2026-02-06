@@ -32,27 +32,27 @@ export const Game: React.FC = () => {
 
   if (loading) return <div className="p-4 text-center">Loading...</div>;
   if (isError) return (
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen">
           <Header />
           <div className="p-8 text-center">
-            <div className="text-red-600 mb-4">Failed to load word set.</div>
-            <Link to="/" className="text-blue-600 hover:underline">Back to Home</Link>
+            <div className="text-brand-sunset-end mb-4">Failed to load word set.</div>
+            <Link to="/" className="text-brand-amber hover:underline">Back to Home</Link>
           </div>
       </div>
   );
   if (!wordSet) return null;
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <Header />
       <main className="container mx-auto p-4 max-w-2xl">
-        <div className="sticky top-0 z-10 bg-gray-100 pb-4 pt-2">
-            <div className="mb-2 flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-800">{wordSet.title}</h1>
-                <Link to="/" className="text-sm text-gray-500 hover:text-gray-700">← Change Set</Link>
+        <div className="sticky top-0 z-10 bg-brand-onyx pb-4 pt-2">
+            <div className="mb-4 flex justify-between items-center border-b border-brand-parchment/10 pb-2">
+                <h1 className="text-2xl font-extrabold text-brand-parchment uppercase tracking-wide">{wordSet.title}</h1>
+                <Link to="/" className="text-sm text-brand-amber hover:text-brand-sunset-start font-medium">← Change Set</Link>
             </div>
 
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+            <div className="bg-brand-onyx border-2 border-brand-parchment/20 p-4 rounded-xl shadow-lg">
                 <GameStatus
                     status={status}
                     guesses={guesses}
@@ -68,7 +68,7 @@ export const Game: React.FC = () => {
             </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mt-4">
+        <div className="bg-brand-onyx p-6 rounded-xl shadow-lg border-2 border-brand-parchment/20 mt-4">
             <WordChain
                 words={words}
                 currentWordIndex={currentWordIndex}
