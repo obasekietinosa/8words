@@ -8,6 +8,7 @@ export function useGame(wordSet: WordSet | null) {
   const [guesses, setGuesses] = useState<string[]>([]);
   const [status, setStatus] = useState<GameStatus>('playing');
   const [isRevealed, setIsRevealed] = useState(false);
+  const [revealedIndices, setRevealedIndices] = useState<Set<number>>(new Set([0]));
 
   const words = wordSet ? wordSet.words.split(',') : [];
 
@@ -22,6 +23,7 @@ export function useGame(wordSet: WordSet | null) {
     setGuesses([]);
     setStatus('playing');
     setIsRevealed(false);
+    setRevealedIndices(new Set([0]));
   }, []);
 
   const submitGuess = useCallback((guess: string) => {
@@ -42,27 +44,49 @@ export function useGame(wordSet: WordSet | null) {
         setStatus('won');
         setCurrentWordIndex(prev => prev + 1);
         setGuesses([]);
+        setRevealedIndices(new Set([0]));
       } else {
         // Move to next word
         setCurrentWordIndex(prev => prev + 1);
         setGuesses([]);
+        setRevealedIndices(new Set([0]));
       }
     } else {
       // Incorrect guess
       const newGuesses = [...guesses, guess];
       setGuesses(newGuesses);
+
+      // Reveal a random unrevealed character
+      const unrevealedIndices: number[] = [];
+      for (let i = 0; i < targetWord.length; i++) {
+        if (!revealedIndices.has(i)) {
+          unrevealedIndices.push(i);
+        }
+      }
+
+      if (unrevealedIndices.length > 0) {
+        const randomIndex = Math.floor(Math.random() * unrevealedIndices.length);
+        const indexToReveal = unrevealedIndices[randomIndex];
+        setRevealedIndices(prev => {
+          const newSet = new Set(prev);
+          newSet.add(indexToReveal);
+          return newSet;
+        });
+      }
+
       if (newGuesses.length >= MAX_GUESSES) {
         setStatus('lost');
         setIsRevealed(true);
       }
     }
-  }, [wordSet, currentWordIndex, guesses, status, words]);
+  }, [wordSet, currentWordIndex, guesses, status, words, revealedIndices]);
 
   return {
     currentWordIndex,
     guesses,
     status,
     isRevealed,
+    revealedIndices,
     submitGuess,
     resetGame,
     words,
