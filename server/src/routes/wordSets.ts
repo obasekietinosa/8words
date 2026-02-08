@@ -5,8 +5,20 @@ const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const wordSets = await WordSetModel.findAll();
-    res.json(wordSets);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const { wordSets, total } = await WordSetModel.findAll(page, limit);
+
+    res.json({
+      data: wordSets,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });

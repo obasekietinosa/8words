@@ -53,6 +53,19 @@ export const Home: React.FC = () => {
             </button>
           </div>
 
+          {/* View All Puzzles */}
+          <Link to="/puzzles" className="block group">
+            <Card hoverEffect className="flex flex-col sm:flex-row items-center justify-between p-8 bg-neo-secondary border-4 border-black gap-4 text-center sm:text-left">
+              <div className="flex items-center gap-4">
+                <Grid className="h-8 w-8" />
+                <h2 className="text-2xl font-black uppercase">View All Puzzles</h2>
+              </div>
+              <span className="font-bold uppercase group-hover:underline decoration-4 underline-offset-4 text-sm sm:text-base">
+                Browse Archive &rarr;
+              </span>
+            </Card>
+          </Link>
+
           {/* How to Play */}
           <Card className="border-4 border-black p-8 bg-white">
             <div className="flex items-center gap-4 mb-6">
@@ -75,19 +88,6 @@ export const Home: React.FC = () => {
               </div>
             </div>
           </Card>
-
-          {/* View All Puzzles */}
-          <Link to="/puzzles" className="block group">
-            <Card hoverEffect className="flex items-center justify-between p-8 bg-neo-secondary border-4 border-black">
-              <div className="flex items-center gap-4">
-                <Grid className="h-8 w-8" />
-                <h2 className="text-2xl font-black uppercase">View All Puzzles</h2>
-              </div>
-              <span className="font-bold uppercase group-hover:underline decoration-4 underline-offset-4">
-                Browse Archive &rarr;
-              </span>
-            </Card>
-          </Link>
 
         </div>
       </Container>
