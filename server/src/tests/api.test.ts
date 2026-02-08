@@ -26,16 +26,20 @@ describe('Word Sets API', () => {
   });
 
   describe('GET /api/word-sets', () => {
-    it('should return a list of word sets', async () => {
-      mockedWordSetModel.findAll.mockResolvedValue(mockWordSets);
+    it('should return a paginated list of word sets', async () => {
+      mockedWordSetModel.findAll.mockResolvedValue({
+        wordSets: mockWordSets,
+        total: 2
+      });
 
       const res = await request(app).get('/api/word-sets');
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveLength(2);
-      expect(res.body[0].title).toBe('Test Set 1');
+      expect(res.body.data).toHaveLength(2);
+      expect(res.body.meta.total).toBe(2);
+      expect(res.body.data[0].title).toBe('Test Set 1');
       // Date is serialized to string in JSON
-      expect(res.body[0].published_at).toBe(mockWordSets[0].published_at.toISOString());
+      expect(res.body.data[0].published_at).toBe(mockWordSets[0].published_at.toISOString());
     });
 
     it('should handle errors', async () => {

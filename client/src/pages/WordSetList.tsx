@@ -1,18 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { getWordSets } from '../services/api';
 import { Header } from '../components/Header';
 import { Container } from '../components/ui/Container';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 
 export const WordSetList: React.FC = () => {
-  const { data: wordSets = [], isLoading: loading, isError } = useQuery({
-    queryKey: ['wordSets'],
-    queryFn: getWordSets,
+  const [page, setPage] = useState(1);
+  const limit = 9;
+
+  const { data, isLoading: loading, isError } = useQuery({
+    queryKey: ['wordSets', page],
+    queryFn: () => getWordSets(page, limit),
+    placeholderData: keepPreviousData,
   });
+
+  const wordSets = data?.data || [];
+  const totalPages = data?.meta.totalPages || 0;
 
   return (
     <div className="min-h-screen bg-neo-bg">
@@ -75,6 +83,29 @@ export const WordSetList: React.FC = () => {
 
         {!loading && wordSets.length === 0 && !isError && (
             <div className="text-center text-gray-500 font-bold uppercase mt-12">No word sets available.</div>
+        )}
+
+        {/* Pagination Controls */}
+        {!loading && !isError && totalPages > 1 && (
+          <div className="mt-12 flex justify-center items-center gap-4">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="p-2 border-2 border-black bg-white shadow-neo-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <span className="font-bold uppercase">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="p-2 border-2 border-black bg-white shadow-neo-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
         )}
       </Container>
     </div>

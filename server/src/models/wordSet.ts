@@ -14,10 +14,20 @@ export interface WordSetSummary {
   published_at: Date | null;
 }
 
-export const findAll = async (): Promise<WordSetSummary[]> => {
-  const text = 'SELECT id, title, published_at FROM word_sets ORDER BY published_at DESC';
-  const result = await query<WordSetSummary>(text);
-  return result.rows;
+export const findAll = async (page: number = 1, limit: number = 10): Promise<{ wordSets: WordSetSummary[], total: number }> => {
+  const offset = (page - 1) * limit;
+  const text = 'SELECT id, title, published_at FROM word_sets ORDER BY published_at DESC LIMIT $1 OFFSET $2';
+  const countText = 'SELECT COUNT(*) FROM word_sets';
+
+  const [result, countResult] = await Promise.all([
+    query<WordSetSummary>(text, [limit, offset]),
+    query<{ count: string }>(countText)
+  ]);
+
+  return {
+    wordSets: result.rows,
+    total: parseInt(countResult.rows[0].count, 10)
+  };
 };
 
 export const findById = async (id: number): Promise<WordSet | null> => {

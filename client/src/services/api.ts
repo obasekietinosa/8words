@@ -7,12 +7,20 @@ const api = axios.create({
   baseURL: `${API_URL}/api`
 });
 
-export const getWordSets = async (): Promise<WordSetSummary[]> => {
-  const response = await api.get<WordSetSummary[]>('/word-sets');
-  if (!Array.isArray(response.data)) {
-    console.error('getWordSets: Expected array but received:', response.data);
-    return [];
-  }
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export const getWordSets = async (page: number = 1, limit: number = 9): Promise<PaginatedResponse<WordSetSummary>> => {
+  const response = await api.get<PaginatedResponse<WordSetSummary>>('/word-sets', {
+    params: { page, limit }
+  });
   return response.data;
 };
 
